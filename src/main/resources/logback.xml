@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The configuration file is modified within 1 minutes after the re loading -->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+	<!-- Console Info -->
+	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<!-- 
+				Format
+					%d - date
+					%thread - threadName
+					%-5levelLevel - from the left shows the width of 5 characters
+					%msg - log info
+					%n - newlines
+			-->
+			<pattern>%d %-1level %logger - %msg %n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="org.springframework">
+		<level value="WARN" />
+	</logger>
+	<logger name="com.ldap">
+		<level value="INFO" />
+	</logger>
+	<!-- Console -->
+	<root level="INFO">
+		<appender-ref ref="Console" />
+	</root>
+</configuration>

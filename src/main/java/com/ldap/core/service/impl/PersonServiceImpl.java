@@ -59,7 +59,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public List<Person> findPersonByCommonName(String commonName) {
+    public List<Person> getPersonByCommonName(String commonName) {
         List<Person> list = new ArrayList<Person>();
         try {
             AndFilter andFilter = new AndFilter();
@@ -97,5 +97,22 @@ public class PersonServiceImpl implements PersonService {
             ex.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public Person getPersonByUserId(String userId) {
+        Person person = new Person();
+        try {
+            AndFilter andFilter = new AndFilter();
+            andFilter.and(new EqualsFilter("objectclass", "person"));
+            andFilter.and(new EqualsFilter("uid", userId));
+            List<Object> search = ldapTemplate.search("", andFilter.encode(), new PersonAttributesMapper());
+            if ((search != null) && !search.isEmpty()) {
+                person = (Person) search.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return person;
     }
 }

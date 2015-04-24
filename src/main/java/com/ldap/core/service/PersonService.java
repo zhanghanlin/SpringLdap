@@ -52,5 +52,15 @@ public interface PersonService {
      * @return
      * @since JDK 1.7
      */
-    public List<Person> findPersonByCommonName(String commonName);
+    public List<Person> getPersonByCommonName(String commonName);
+
+    /**
+     * 根据uid查询
+     * 
+     * @author zhanghanlin
+     * @param userId
+     * @return
+     * @since JDK 1.7
+     */
+    public Person getPersonByUserId(String userId);
 }
