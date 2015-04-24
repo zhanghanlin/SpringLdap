@@ -14,6 +14,8 @@ import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -36,24 +38,33 @@ import com.ldap.core.service.PersonService;
 @ContextConfiguration({ "file:src/main/resources/conf_spring/applicationContext.xml" })
 public class PersonTest {
 
+    Logger logger = LoggerFactory.getLogger(PersonTest.class);
+
     @Autowired
     PersonService personService;
 
     @Test
     public void testGetAllPerson() {
         List<Person> persons = personService.getAllPerson();
+        for (Person p : persons) {
+            logger.info(p.toString());
+        }
         Assert.assertNotNull(persons);
     }
 
     @Test
     public void testGetPersonByUserId() {
         Person person = personService.getPersonByUserId("10000");
+        logger.info(person.toString());
         Assert.assertNotNull(person);
     }
 
     @Test
     public void testGetPersonByCommonName() {
-        List<Person> persons = personService.getPersonByCommonName("test");
+        List<Person> persons = personService.getPersonByCommonName("updateTest");
+        for (Person p : persons) {
+            logger.info(p.toString());
+        }
         Assert.assertNotNull(persons);
     }
 
@@ -83,5 +94,11 @@ public class PersonTest {
         person.setCommonName("updateTest");
         boolean res = personService.updatePerson(person);
         Assert.assertTrue(res);
+    }
+
+    @Test
+    public void teatGetDnByUserId() {
+        String dn = personService.getDnByUserId("10000");
+        logger.info(dn);
     }
 }

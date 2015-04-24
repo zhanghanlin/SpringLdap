@@ -84,4 +84,14 @@ public interface PersonService {
      * @since JDK 1.7
      */
     public boolean updatePerson(Person person);
+
+    /**
+     * 根据CommonName获取Dn
+     * 
+     * @author zhanghanlin
+     * @param userId
+     * @return
+     * @since JDK 1.7
+     */
+    public String getDnByUserId(String userId);
 }

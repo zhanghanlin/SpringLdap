@@ -18,7 +18,9 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.support.LdapUtils;
@@ -145,5 +147,20 @@ public class PersonServiceImpl extends ExtendService implements PersonService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public String getDnByUserId(String userId) {
+        EqualsFilter f = new EqualsFilter("uid", userId);
+        List<Object> result = ldapTemplate.search("", f.toString(), new AbstractContextMapper<Object>() {
+            @Override
+            protected Object doMapFromContext(DirContextOperations ctx) {
+                return ctx.getNameInNamespace();
+            }
+        });
+        if (result.size() != 1) {
+            throw new RuntimeException("User not found or not unique");
+        }
+        return (String) result.get(0);
     }
 }
