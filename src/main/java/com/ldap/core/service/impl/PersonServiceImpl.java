@@ -14,14 +14,18 @@ import java.util.List;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Service;
 
 import com.ldap.core.bean.Person;
+import com.ldap.core.service.ExtendService;
 import com.ldap.core.service.PersonService;
 import com.ldap.core.util.PersonAttributesMapper;
 import com.ldap.util.StringUtils;
@@ -38,7 +42,7 @@ import com.ldap.util.StringUtils;
  * @see
  */
 @Service("personService")
-public class PersonServiceImpl implements PersonService {
+public class PersonServiceImpl extends ExtendService implements PersonService {
 
     @Autowired
     LdapTemplate ldapTemplate;
@@ -114,5 +118,32 @@ public class PersonServiceImpl implements PersonService {
             e.printStackTrace();
         }
         return person;
+    }
+
+    @Override
+    public boolean deletePersonByUid(String uid) {
+        try {
+            ldapTemplate.unbind(LdapUtils.newLdapName("uid=" + uid));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updatePerson(Person person) {
+        try {
+            ModificationItem[] item = new ModificationItem[] { new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("uid", person.getUserId().trim())),
+                    new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("sn", person.getSurName().trim())),
+                    new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("cn", person.getCommonName().trim())),
+                    new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("mail", person.getMail().trim())),
+                    new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("telephoneNumber", person.getTelephone().trim())) };
+            ldapTemplate.modifyAttributes(LdapUtils.newLdapName("uid=" + person.getUserId().trim()), item);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

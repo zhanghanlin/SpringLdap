@@ -63,4 +63,25 @@ public interface PersonService {
      * @since JDK 1.7
      */
     public Person getPersonByUserId(String userId);
+
+    /**
+     * 删除用户
+     * 
+     * @author zhanghanlin
+     * @param attr
+     * @param attrVal
+     * @return
+     * @since JDK 1.7
+     */
+    public boolean deletePersonByUid(String uid);
+
+    /**
+     * 更新
+     * 
+     * @author zhanghanlin
+     * @param person
+     * @return
+     * @since JDK 1.7
+     */
+    public boolean updatePerson(Person person);
 }

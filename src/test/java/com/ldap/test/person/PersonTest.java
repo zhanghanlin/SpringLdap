@@ -19,7 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ldap.core.bean.Person;
-import com.ldap.core.service.impl.PersonServiceImpl;
+import com.ldap.core.service.PersonService;
 
 /**
  * ClassName:Test <br/>
@@ -37,7 +37,7 @@ import com.ldap.core.service.impl.PersonServiceImpl;
 public class PersonTest {
 
     @Autowired
-    PersonServiceImpl personService;
+    PersonService personService;
 
     @Test
     public void testGetAllPerson() {
@@ -67,6 +67,21 @@ public class PersonTest {
         person.setMail("a@b.com");
         person.setPassword("111111");
         boolean res = personService.addPerson(person);
+        Assert.assertTrue(res);
+    }
+
+    @Test
+    public void testDeletePersonByUid() {
+        boolean res = personService.deletePersonByUid("42a43e25-439e-4074-9d80-dae6f8814ebb");
+        Assert.assertTrue(res);
+    }
+
+    @Test
+    public void testUpdatePerson() {
+        Person person = personService.getPersonByUserId("10000");
+        System.out.println(person.toString());
+        person.setCommonName("updateTest");
+        boolean res = personService.updatePerson(person);
         Assert.assertTrue(res);
     }
 }

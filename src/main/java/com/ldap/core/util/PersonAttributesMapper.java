@@ -48,7 +48,7 @@ public class PersonAttributesMapper implements AttributesMapper<Object> {
         if (mail != null) {
             person.setMail(mail.get().toString());
         }
-        Attribute telephone = attributes.get("telephone");
+        Attribute telephone = attributes.get("telephoneNumber");
         if (telephone != null) {
             person.setTelephone(telephone.get().toString());
         }
