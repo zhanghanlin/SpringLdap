@@ -44,8 +44,8 @@ public class PersonTest {
     PersonService personService;
 
     @Test
-    public void testGetAllPerson() {
-        List<Person> persons = personService.getAllPerson();
+    public void testGetAll() {
+        List<Person> persons = personService.getAll();
         for (Person p : persons) {
             logger.info(p.toString());
         }
@@ -53,15 +53,15 @@ public class PersonTest {
     }
 
     @Test
-    public void testGetPersonByUserId() {
-        Person person = personService.getPersonByUserId("10000");
+    public void testGetByUserId() {
+        Person person = personService.getByUserId("10000");
         logger.info(person.toString());
         Assert.assertNotNull(person);
     }
 
     @Test
-    public void testGetPersonByCommonName() {
-        List<Person> persons = personService.getPersonByCommonName("updateTest");
+    public void testGetByCommonName() {
+        List<Person> persons = personService.getByCommonName("updateTest");
         for (Person p : persons) {
             logger.info(p.toString());
         }
@@ -69,30 +69,31 @@ public class PersonTest {
     }
 
     @Test
-    public void testAddPerson() {
+    public void testAdd() {
         Person person = new Person();
         person.setUserId(UUID.randomUUID().toString());
         person.setCommonName("T.Test");
         person.setSurName("T");
         person.setTelephone("8888");
         person.setMail("a@b.com");
+        person.setOrganizationalUnit("People");
         person.setPassword("111111");
-        boolean res = personService.addPerson(person);
+        boolean res = personService.add(person);
         Assert.assertTrue(res);
     }
 
     @Test
-    public void testDeletePersonByUid() {
-        boolean res = personService.deletePersonByUid("42a43e25-439e-4074-9d80-dae6f8814ebb");
+    public void testDeleteByUid() {
+        boolean res = personService.deleteByUid("42a43e25-439e-4074-9d80-dae6f8814ebb");
         Assert.assertTrue(res);
     }
 
     @Test
-    public void testUpdatePerson() {
-        Person person = personService.getPersonByUserId("10000");
+    public void testUpdate() {
+        Person person = personService.getByUserId("10000");
         System.out.println(person.toString());
         person.setCommonName("updateTest");
-        boolean res = personService.updatePerson(person);
+        boolean res = personService.update(person);
         Assert.assertTrue(res);
     }
 

@@ -25,6 +25,8 @@ import com.ldap.core.bean.Person;
  */
 public interface PersonService {
 
+    static final String objectClass = "person";
+
     /**
      * 新增用户
      * 
@@ -33,7 +35,7 @@ public interface PersonService {
      * @return
      * @since JDK 1.7
      */
-    public boolean addPerson(Person person);
+    public boolean add(Person person);
 
     /**
      * 得到所有人员信息
@@ -42,7 +44,7 @@ public interface PersonService {
      * @return
      * @since JDK 1.7
      */
-    public List<Person> getAllPerson();
+    public List<Person> getAll();
 
     /**
      * 根据CN查询
@@ -52,7 +54,7 @@ public interface PersonService {
      * @return
      * @since JDK 1.7
      */
-    public List<Person> getPersonByCommonName(String commonName);
+    public List<Person> getByCommonName(String commonName);
 
     /**
      * 根据uid查询
@@ -62,7 +64,7 @@ public interface PersonService {
      * @return
      * @since JDK 1.7
      */
-    public Person getPersonByUserId(String userId);
+    public Person getByUserId(String userId);
 
     /**
      * 删除用户
@@ -73,7 +75,7 @@ public interface PersonService {
      * @return
      * @since JDK 1.7
      */
-    public boolean deletePersonByUid(String uid);
+    public boolean deleteByUid(String uid);
 
     /**
      * 更新
@@ -83,7 +85,7 @@ public interface PersonService {
      * @return
      * @since JDK 1.7
      */
-    public boolean updatePerson(Person person);
+    public boolean update(Person person);
 
     /**
      * 根据CommonName获取Dn

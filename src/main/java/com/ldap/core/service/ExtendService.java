@@ -8,7 +8,6 @@
 
 package com.ldap.core.service;
 
-
 /**
  * ClassName:ExtendService <br/>
  * Function: TODO ADD FUNCTION. <br/>
@@ -20,6 +19,5 @@ package com.ldap.core.service;
  * @since JDK 1.7
  * @see
  */
-public abstract class ExtendService {
-
+public abstract class ExtendService<T> {
 }

@@ -44,17 +44,17 @@ import com.ldap.util.StringUtils;
  * @see
  */
 @Service("personService")
-public class PersonServiceImpl extends ExtendService implements PersonService {
+public class PersonServiceImpl extends ExtendService<Person> implements PersonService {
 
     @Autowired
     LdapTemplate ldapTemplate;
 
     @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public List<Person> getAllPerson() {
+    public List<Person> getAll() {
         List<Person> list = new ArrayList<Person>();
         try {
-            List search = ldapTemplate.search("", "(objectClass=person)", new PersonAttributesMapper());
+            List search = ldapTemplate.search("", "(objectClass=" + objectClass + ")", new PersonAttributesMapper());
             list.addAll(search);
         } catch (Exception e) {
             // TODO: handle exception
@@ -65,11 +65,11 @@ public class PersonServiceImpl extends ExtendService implements PersonService {
 
     @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public List<Person> getPersonByCommonName(String commonName) {
+    public List<Person> getByCommonName(String commonName) {
         List<Person> list = new ArrayList<Person>();
         try {
             AndFilter andFilter = new AndFilter();
-            andFilter.and(new EqualsFilter("objectclass", "person"));
+            andFilter.and(new EqualsFilter("objectclass", objectClass));
             andFilter.and(new EqualsFilter("cn", commonName));
             List search = ldapTemplate.search("", andFilter.encode(), new PersonAttributesMapper());
             list.addAll(search);
@@ -80,12 +80,12 @@ public class PersonServiceImpl extends ExtendService implements PersonService {
     }
 
     @Override
-    public boolean addPerson(Person person) {
+    public boolean add(Person person) {
         try {
             // 基类设置
             BasicAttribute ocattr = new BasicAttribute("objectClass");
             ocattr.add("top");
-            ocattr.add("person");
+            ocattr.add(objectClass);
             ocattr.add("uidObject");
             ocattr.add("inetOrgPerson");
             ocattr.add("organizationalPerson");
@@ -96,6 +96,7 @@ public class PersonServiceImpl extends ExtendService implements PersonService {
             attrs.put("sn", StringUtils.trimToEmpty(person.getSurName()));
             attrs.put("mail", StringUtils.trimToEmpty(person.getMail()));
             attrs.put("telephoneNumber", StringUtils.trimToEmpty(person.getTelephone()));
+            attrs.put("ou", StringUtils.trimToEmpty(person.getOrganizationalUnit()));
             attrs.put("userPassword", StringUtils.trimToEmpty(person.getPassword()));
             ldapTemplate.bind("uid=" + person.getUserId().trim(), null, attrs);
             return true;
@@ -106,11 +107,11 @@ public class PersonServiceImpl extends ExtendService implements PersonService {
     }
 
     @Override
-    public Person getPersonByUserId(String userId) {
+    public Person getByUserId(String userId) {
         Person person = new Person();
         try {
             AndFilter andFilter = new AndFilter();
-            andFilter.and(new EqualsFilter("objectclass", "person"));
+            andFilter.and(new EqualsFilter("objectclass", objectClass));
             andFilter.and(new EqualsFilter("uid", userId));
             List<Object> search = ldapTemplate.search("", andFilter.encode(), new PersonAttributesMapper());
             if ((search != null) && !search.isEmpty()) {
@@ -123,7 +124,7 @@ public class PersonServiceImpl extends ExtendService implements PersonService {
     }
 
     @Override
-    public boolean deletePersonByUid(String uid) {
+    public boolean deleteByUid(String uid) {
         try {
             ldapTemplate.unbind(LdapUtils.newLdapName("uid=" + uid));
         } catch (Exception e) {
@@ -134,7 +135,7 @@ public class PersonServiceImpl extends ExtendService implements PersonService {
     }
 
     @Override
-    public boolean updatePerson(Person person) {
+    public boolean update(Person person) {
         try {
             ModificationItem[] item = new ModificationItem[] { new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("uid", person.getUserId().trim())),
                     new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("sn", person.getSurName().trim())),

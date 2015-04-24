@@ -30,6 +30,7 @@ public class Person extends Object implements Serializable {
     private String commonName;
     private String mail;
     private String telephone;
+    private String organizationalUnit;
     private String password;
 
     public String getUserId() {
@@ -70,6 +71,14 @@ public class Person extends Object implements Serializable {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public String getOrganizationalUnit() {
+        return organizationalUnit;
+    }
+
+    public void setOrganizationalUnit(String organizationalUnit) {
+        this.organizationalUnit = organizationalUnit;
     }
 
     public String getPassword() {

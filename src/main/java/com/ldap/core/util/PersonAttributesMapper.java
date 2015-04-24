@@ -52,6 +52,10 @@ public class PersonAttributesMapper implements AttributesMapper<Object> {
         if (telephone != null) {
             person.setTelephone(telephone.get().toString());
         }
+        Attribute organizationalUnit = attributes.get("ou");
+        if (organizationalUnit != null) {
+            person.setOrganizationalUnit(organizationalUnit.get().toString());
+        }
         return person;
     }
 }
