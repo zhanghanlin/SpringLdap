@@ -95,10 +95,11 @@ public class PersonServiceImpl extends ExtendService<Person> implements PersonSe
             attrs.put("cn", StringUtils.trimToEmpty(person.getCommonName()));
             attrs.put("sn", StringUtils.trimToEmpty(person.getSurName()));
             attrs.put("mail", StringUtils.trimToEmpty(person.getMail()));
-            attrs.put("telephoneNumber", StringUtils.trimToEmpty(person.getTelephone()));
             attrs.put("ou", StringUtils.trimToEmpty(person.getOrganizationalUnit()));
+            attrs.put("telephoneNumber", StringUtils.trimToEmpty(person.getTelephone()));
             attrs.put("userPassword", StringUtils.trimToEmpty(person.getPassword()));
-            ldapTemplate.bind("uid=" + person.getUserId().trim(), null, attrs);
+            String dn = "uid=" + person.getUserId().trim() + ",ou=" + person.getOrganizationalUnit();
+            ldapTemplate.bind(dn, null, attrs);
             return true;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -124,9 +125,9 @@ public class PersonServiceImpl extends ExtendService<Person> implements PersonSe
     }
 
     @Override
-    public boolean deleteByUid(String uid) {
+    public boolean deleteByUid(String uid, String ou) {
         try {
-            ldapTemplate.unbind(LdapUtils.newLdapName("uid=" + uid));
+            ldapTemplate.unbind(LdapUtils.newLdapName("uid=" + uid + ",ou=" + ou));
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -142,7 +143,7 @@ public class PersonServiceImpl extends ExtendService<Person> implements PersonSe
                     new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("cn", person.getCommonName().trim())),
                     new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("mail", person.getMail().trim())),
                     new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("telephoneNumber", person.getTelephone().trim())) };
-            ldapTemplate.modifyAttributes(LdapUtils.newLdapName("uid=" + person.getUserId().trim()), item);
+            ldapTemplate.modifyAttributes(LdapUtils.newLdapName("uid=" + person.getUserId().trim()) + ",ou=" + person.getOrganizationalUnit(), item);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

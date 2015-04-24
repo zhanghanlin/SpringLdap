@@ -75,7 +75,7 @@ public interface PersonService {
      * @return
      * @since JDK 1.7
      */
-    public boolean deleteByUid(String uid);
+    public boolean deleteByUid(String uid, String ou);
 
     /**
      * 更新
