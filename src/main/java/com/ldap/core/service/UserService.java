@@ -22,4 +22,16 @@ package com.ldap.core.service;
 public interface UserService {
 
     static final String objectClass = "person";
+
+    /**
+     * 
+     * 验证用户
+     * 
+     * @author zhanghanlin
+     * @param userName
+     * @param password
+     * @return
+     * @since JDK 1.7
+     */
+    public boolean isValid(String userName, String password);
 }

@@ -43,16 +43,28 @@ public class UserTest {
     @Autowired
     UserServiceImpl userService;
 
-    static String userName = "zhaoyi";
-    static String cn = "testAdd";
+    static String[] users = new String[] { "zhaoyi", "qianer", "sunsan", "lisi", "zhouwu", "wuliu", "zhengqi", "wangba" };
+
+    static String defaultPwd = "111111";
+
+    /**
+     * 首个用户
+     * 
+     * @author zhanghanlin
+     * @param group
+     * @return
+     * @since JDK 1.7
+     */
+    static String getFirstUser() {
+        return users[0];
+    }
 
     @Test
     public void testACreate() {
         User user = new User();
         user.setTelephone("8888");
-        user.setPassword("111111");
-        String[] un = new String[] { "zhaoyi", "qianer", "sunsan", "lisi", "zhouwu", "wuliu", "zhengqi", "wangba" };
-        for (String s : un) {
+        user.setPassword(defaultPwd);
+        for (String s : users) {
             user.setUserName(s);
             user.setCommonName(s);
             user.setMail(s + "@minshengec.cn");
@@ -64,31 +76,43 @@ public class UserTest {
 
     @Test
     public void testBSearch() {
-        User user = userService.search(userName);
+        User user = userService.search(getFirstUser());
         logger.info(user.toString());
         Assert.assertNotNull(user);
     }
 
     @Test
     public void testCUpdate() {
-        User user = userService.search(userName);
+        User user = userService.search(getFirstUser());
         logger.info("before update : " + user.toString());
-        user.setCommonName("updateTest2");
+        user.setCommonName("update cn");
         boolean res = userService.update(user);
-        logger.info("after update : " + userService.search(userName).toString());
+        logger.info("after update : " + userService.search(getFirstUser()).toString());
         Assert.assertTrue(res);
     }
 
     @Test
-    public void testDGetDnByUserId() {
-        String dn = userService.getUserDn(userName);
+    public void testDGetDn() {
+        String dn = userService.getDn("uid", getFirstUser());
         logger.info(dn);
         Assert.assertNotNull(dn);
     }
 
     @Test
-    public void testEDelete() {
-        boolean res = userService.delete(userName);
+    public void testEIsVaild() {
+        boolean res = userService.isValid(getFirstUser(), defaultPwd);
+        Assert.assertTrue(res);
+    }
+
+    @Test
+    public void testFDelete() {
+        boolean res = true;
+        for (String s : users) {
+            if (!res) {
+                break;
+            }
+            res = userService.delete(s);
+        }
         Assert.assertTrue(res);
     }
 }

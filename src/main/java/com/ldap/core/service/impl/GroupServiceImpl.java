@@ -17,10 +17,8 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.AbstractContextMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.stereotype.Service;
@@ -45,8 +43,7 @@ import com.ldap.util.StringUtils;
 @Service("groupService")
 public class GroupServiceImpl extends ExtendService<Group> implements GroupService {
 
-    @Autowired
-    LdapTemplate ldapTemplate;
+    Logger logger = LoggerFactory.getLogger(GroupServiceImpl.class);
 
     @Override
     public boolean create(Group t) {
@@ -68,11 +65,12 @@ public class GroupServiceImpl extends ExtendService<Group> implements GroupServi
                 attrs.put("cn", StringUtils.trimToEmpty(t.getName()));
                 attrs.put("description", StringUtils.trimToEmpty(t.getDescription()));
                 ldapTemplate.bind(getGroupDn(t.getName()), null, attrs);
+                logger.info("create success ： {}", t.toString());
                 return true;
             }
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("create error ： {} \r\n {}", t.toString(), e);
             return false;
         }
     }
@@ -81,24 +79,21 @@ public class GroupServiceImpl extends ExtendService<Group> implements GroupServi
     public boolean delete(String name) {
         try {
             ldapTemplate.unbind(getGroupDn(name));
+            logger.info("delete success , name ： {}", name);
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("delete error , name  ： {} \r\n {}", name, e);
             return false;
         }
-        return true;
     }
 
     @Override
     public boolean update(Group t) {
-
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public Group search(String userName) {
-
-        // TODO Auto-generated method stub
+    public Group search(String name) {
         return null;
     }
 
@@ -107,8 +102,9 @@ public class GroupServiceImpl extends ExtendService<Group> implements GroupServi
         try {
             ModificationItem[] item = new ModificationItem[] { new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("uniqueMember", getUserDn(userName))) };
             ldapTemplate.modifyAttributes(getGroupDn(groupName), item);
+            logger.info("assignUser success , userName ： {}, groupName : {}", userName, groupName);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("assignUser error , userName ： {}, groupName : {} \r\n {}", userName, groupName, e);
         }
     }
 
@@ -117,24 +113,10 @@ public class GroupServiceImpl extends ExtendService<Group> implements GroupServi
         try {
             ModificationItem[] item = new ModificationItem[] { new ModificationItem(DirContext.REMOVE_ATTRIBUTE, new BasicAttribute("uniqueMember", getUserDn(userName))) };
             ldapTemplate.modifyAttributes(getGroupDn(groupName), item);
+            logger.info("removeUser success , userName ： {}, groupName : {}", userName, groupName);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("assignUser error , userName ： {}, groupName : {} \r\n {}", userName, groupName, e);
         }
-    }
-
-    @Override
-    public String getDn(String name) {
-        EqualsFilter f = new EqualsFilter("cn", name);
-        List<Object> result = ldapTemplate.search("", f.toString(), new AbstractContextMapper<Object>() {
-            @Override
-            protected Object doMapFromContext(DirContextOperations ctx) {
-                return ctx.getNameInNamespace();
-            }
-        });
-        if (result.size() != 1) {
-            throw new RuntimeException("Group not found or not unique");
-        }
-        return (String) result.get(0);
     }
 
     @Override
@@ -150,8 +132,9 @@ public class GroupServiceImpl extends ExtendService<Group> implements GroupServi
                     list.add((Group) o);
                 }
             }
+            logger.info("getGroup success userName ： {}, size: {}", userName, list.size());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("getGroup error userName ： {} \r\n {}", userName, e);
         }
         return list;
     }

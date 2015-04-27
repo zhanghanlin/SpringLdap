@@ -16,16 +16,14 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.core.DirContextOperations;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.AbstractContextMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.ldap.NamingException;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.stereotype.Service;
 
 import com.ldap.core.bean.User;
-import com.ldap.core.exception.UserNotFoundException;
 import com.ldap.core.service.ExtendService;
 import com.ldap.core.service.UserService;
 import com.ldap.core.util.UserAttributesMapper;
@@ -45,8 +43,7 @@ import com.ldap.util.StringUtils;
 @Service("userService")
 public class UserServiceImpl extends ExtendService<User> implements UserService {
 
-    @Autowired
-    LdapTemplate ldapTemplate;
+    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     public boolean create(User t) {
@@ -67,9 +64,10 @@ public class UserServiceImpl extends ExtendService<User> implements UserService 
             attrs.put("telephoneNumber", StringUtils.trimToEmpty(t.getTelephone()));
             attrs.put("userPassword", StringUtils.trimToEmpty(t.getPassword()));
             ldapTemplate.bind(getUserDn(t.getUserName()), null, attrs);
+            logger.info("create success ： {}", t.toString());
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("create error ： {} \r\n {}", t.toString(), e);
             return false;
         }
     }
@@ -78,11 +76,12 @@ public class UserServiceImpl extends ExtendService<User> implements UserService 
     public boolean delete(String userName) {
         try {
             ldapTemplate.unbind(getUserDn(userName));
+            logger.info("delete success , userName ： {}", userName);
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("delete error , userName  ： {} \r\n {}", userName, e);
             return false;
         }
-        return true;
     }
 
     @Override
@@ -94,15 +93,16 @@ public class UserServiceImpl extends ExtendService<User> implements UserService 
                     new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("mail", t.getMail())),
                     new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("telephoneNumber", t.getTelephone())) };
             ldapTemplate.modifyAttributes(getUserDn(t.getUserName()), item);
+            logger.info("update success ： {}", t.toString());
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("update error ： {} \r\n {}", t.toString(), e);
             return false;
         }
     }
 
     @Override
-    public User search(String userName) throws UserNotFoundException {
+    public User search(String userName) {
         User user = new User();
         try {
             AndFilter andFilter = new AndFilter();
@@ -112,26 +112,26 @@ public class UserServiceImpl extends ExtendService<User> implements UserService 
             if ((search != null) && !search.isEmpty()) {
                 user = (User) search.get(0);
             }
-        } catch (UserNotFoundException ue) {
-            throw new UserNotFoundException(userName);
+            logger.info("search success userName ： {}, return: {}", userName, user.toString());
+        } catch (NamingException e) {
+            logger.error("search error userName ： {} \r\n {}", userName, e);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("search error userName ： {} \r\n {}", userName, e);
         }
         return user;
     }
 
     @Override
-    public String getDn(String userName) {
-        EqualsFilter f = new EqualsFilter("uid", userName);
-        List<Object> result = ldapTemplate.search("", f.toString(), new AbstractContextMapper<Object>() {
-            @Override
-            protected Object doMapFromContext(DirContextOperations ctx) {
-                return ctx.getNameInNamespace();
-            }
-        });
-        if (result.size() != 1) {
-            throw new RuntimeException("User not found or not unique");
+    public boolean isValid(String userName, String password) {
+        try {
+            AndFilter filter = new AndFilter();
+            filter.and(new EqualsFilter("uid", userName));
+            boolean valid = ldapTemplate.authenticate(getUserDn(userName), filter.toString(), password);
+            logger.info("isValid userName ： {}, isValid: {}", userName, valid);
+            return valid;
+        } catch (NamingException e) {
+            logger.error("isValid error userName ： {} \r\n {}", userName, e);
+            return false;
         }
-        return (String) result.get(0);
     }
 }
