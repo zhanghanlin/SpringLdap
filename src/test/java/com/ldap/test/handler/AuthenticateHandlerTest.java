@@ -18,7 +18,7 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.ldap.core.service.PersonService;
+import com.ldap.core.service.impl.UserServiceImpl;
 
 /**
  * ClassName:Test <br/>
@@ -36,20 +36,20 @@ import com.ldap.core.service.PersonService;
 public class AuthenticateHandlerTest {
 
     @Autowired
-    PersonService personService;
+    UserServiceImpl userService;
 
     @Autowired
     LdapTemplate ldapTemplate;
 
     @Test
     public void authenticate() {
-        String userName = "10000";
+        String userName = "zhaoyi";
         String password = "1111111";
-        String personDn = personService.getDnByUserId(userName);
-        System.out.println("personDn = " + personDn);
+        String userDn = userService.getUserDn(userName);
+        System.out.println("userDn = " + userDn);
         DirContext dirContext = null;
         try {
-            dirContext = ldapTemplate.getContextSource().getContext(personDn, password);
+            dirContext = ldapTemplate.getContextSource().getContext(userDn, password);
             System.out.println(dirContext != null);
         } catch (Exception e) {
             e.printStackTrace();

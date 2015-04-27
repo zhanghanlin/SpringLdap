@@ -8,18 +8,17 @@
 
 package com.ldap.core.handler;
 
+import javax.naming.NameNotFoundException;
 import javax.naming.directory.DirContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.support.LdapUtils;
 
-import com.ldap.core.service.PersonService;
+import com.ldap.core.service.impl.UserServiceImpl;
 
 /**
- * ClassName:Authenticate <br/>
- * Function: TODO ADD FUNCTION. <br/>
- * Reason: TODO ADD REASON. <br/>
+ * 验证用户有效性Handler. <br/>
  * Date: 2015-4-24 下午2:49:20 <br/>
  * 
  * @author zhanghanlin
@@ -30,7 +29,7 @@ import com.ldap.core.service.PersonService;
 public class AuthenticateHandler {
 
     @Autowired
-    PersonService personService;
+    UserServiceImpl userService;
 
     @Autowired
     LdapTemplate ldapTemplate;
@@ -44,11 +43,10 @@ public class AuthenticateHandler {
      * @return
      * @since JDK 1.7
      */
-    public boolean authenticate(String userName, String password) {
-        String personDn = personService.getDnByUserId(userName);
+    public boolean authenticate(String userName, String password) throws NameNotFoundException {
         DirContext dirContext = null;
         try {
-            dirContext = ldapTemplate.getContextSource().getContext(personDn, password);
+            dirContext = ldapTemplate.getContextSource().getContext(userService.getUserDn(userName), password);
             return true;
         } catch (Exception e) {
             return false;

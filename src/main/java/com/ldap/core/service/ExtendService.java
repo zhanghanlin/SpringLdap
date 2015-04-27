@@ -9,9 +9,7 @@
 package com.ldap.core.service;
 
 /**
- * ClassName:ExtendService <br/>
- * Function: TODO ADD FUNCTION. <br/>
- * Reason: TODO ADD REASON. <br/>
+ * Base Service. <br/>
  * Date: 2015-4-24 下午1:32:46 <br/>
  * 
  * @author zhanghanlin
@@ -20,4 +18,66 @@ package com.ldap.core.service;
  * @see
  */
 public abstract class ExtendService<T> {
+
+    /**
+     * 创建
+     * 
+     * @author zhanghanlin
+     * @param t
+     * @return
+     * @since JDK 1.7
+     */
+    public abstract boolean create(T t);
+
+    /**
+     * 
+     * 删除
+     * 
+     * @author zhanghanlin
+     * @param s
+     * @return
+     * @since JDK 1.7
+     */
+    public abstract boolean delete(String s);
+
+    /**
+     * 
+     * 更新
+     * 
+     * @author zhanghanlin
+     * @param t
+     * @return
+     * @since JDK 1.7
+     */
+    public abstract boolean update(T t);
+
+    /**
+     * 
+     * 查询
+     * 
+     * @author zhanghanlin
+     * @param s
+     * @return
+     * @since JDK 1.7
+     */
+    public abstract T search(String s);
+
+    /**
+     * 
+     * 得到DN
+     * 
+     * @author zhanghanlin
+     * @param s
+     * @return
+     * @since JDK 1.7
+     */
+    public abstract String getDn(String s);
+
+    public String getGroupDn(String s) {
+        return new StringBuffer().append("cn=").append(s).append(",ou=Group").toString();
+    }
+
+    public String getUserDn(String s) {
+        return new StringBuffer().append("uid=").append(s).append(",ou=People").toString();
+    }
 }

@@ -8,11 +8,8 @@
 
 package com.ldap.util;
 
-
 /**
- * ClassName:LdapConstant <br/>
- * Function: TODO ADD FUNCTION. <br/>
- * Reason: TODO ADD REASON. <br/>
+ * LDAP 常量类. <br/>
  * Date: 2015-4-24 下午1:24:59 <br/>
  * 
  * @author zhanghanlin
@@ -22,5 +19,8 @@ package com.ldap.util;
  */
 public class LdapConstant {
 
-    public static final String base_dn = "dc=minshengec,dc=cn";
+    /**
+     * Domain DN
+     */
+    public static final String BASE_DN = "dc=minshengec,dc=cn";
 }
