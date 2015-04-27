@@ -1,0 +1,16 @@
+#base
+#/usr/local/openLDAP/bin/ldapadd -x -W -D "cn=Manager,dc=domain,dc=cn" -f /usr/local/openLDAP/etc/openldap/init.ldif
+dn: dc=domain,dc=cn
+dc: domain
+objectClass: top
+objectClass: domain
+
+dn: ou=People,dc=domain,dc=cn
+ou: People
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Group,dc=domain,dc=cn
+ou: Group
+objectClass: top
+objectClass: organizationalUnit

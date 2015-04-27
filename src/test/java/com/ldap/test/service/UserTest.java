@@ -67,7 +67,7 @@ public class UserTest {
         for (String s : users) {
             user.setUserName(s);
             user.setCommonName(s);
-            user.setMail(s + "@minshengec.cn");
+            user.setMail(s + "@domain.cn");
             user.setSurName(s);
             userService.create(user);
         }
