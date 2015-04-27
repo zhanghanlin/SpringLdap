@@ -45,12 +45,10 @@ public class AuthenticateHandlerTest {
     public void authenticate() {
         String userName = "zhaoyi";
         String password = "1111111";
-        String userDn = userService.getUserDn(userName);
-        System.out.println("userDn = " + userDn);
+        String userDn = userService.getDn(userName);
         DirContext dirContext = null;
         try {
             dirContext = ldapTemplate.getContextSource().getContext(userDn, password);
-            System.out.println(dirContext != null);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
