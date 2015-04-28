@@ -137,4 +137,17 @@ public class UserServiceImpl extends ExtendService<User> implements UserService 
             return false;
         }
     }
+
+    @Override
+    public boolean updatePwd(String userName, String passpord) {
+        try {
+            ModificationItem[] item = new ModificationItem[] { new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userPassword", passpord)) };
+            ldapTemplate.modifyAttributes(getUserDn(userName), item);
+            logger.info("updatePwd success , userName ： {}", userName);
+            return true;
+        } catch (Exception e) {
+            logger.error("updatePwd error , userName ： {} \r\n {}", userName, e);
+            return false;
+        }
+    }
 }

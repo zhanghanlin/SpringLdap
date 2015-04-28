@@ -25,6 +25,19 @@ public interface UserService {
 
     /**
      * 
+     * 修改密码
+     * 
+     * @author zhanghanlin
+     * @param userName
+     * @param oldPwd
+     * @param passpord
+     * @return
+     * @since JDK 1.7
+     */
+    public boolean updatePwd(String userName, String passpord);
+
+    /**
+     * 
      * 验证用户
      * 
      * @author zhanghanlin

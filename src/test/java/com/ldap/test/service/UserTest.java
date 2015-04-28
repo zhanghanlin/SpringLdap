@@ -87,7 +87,7 @@ public class UserTest {
         logger.info("before update : " + user.toString());
         user.setCommonName("update cn");
         boolean res = userService.update(user);
-        logger.info("after update : " + userService.search(getFirstUser()).toString());
+        logger.info("after update : {} ", userService.search(getFirstUser()).toString());
         Assert.assertTrue(res);
     }
 
@@ -105,7 +105,24 @@ public class UserTest {
     }
 
     @Test
-    public void testFDelete() {
+    public void testFUpdatePwd() {
+        String userName = getFirstUser();
+        String password = "123456";
+        // 验证原始密码
+        boolean isValid = userService.isValid(getFirstUser(), defaultPwd);
+        if (isValid) {
+            boolean res = userService.updatePwd(getFirstUser(), password);
+            logger.info("update pwd : {}", res);
+        } else {
+            logger.info("updatePwd fail , user vaild fail, userName ： {}", userName);
+        }
+        isValid = userService.isValid(getFirstUser(), password);
+        logger.info("update pwd after valid: {}", isValid);
+        Assert.assertTrue(isValid);
+    }
+
+    @Test
+    public void testGDelete() {
         boolean res = true;
         for (String s : users) {
             if (!res) {
