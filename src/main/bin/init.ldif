@@ -1,5 +1,5 @@
 #base
-#/usr/local/openLDAP/bin/ldapadd -x -W -D "cn=Manager,dc=minshentegec,dc=cn" -f /usr/local/openLDAP/etc/openldap/init.ldif
+#/usr/local/openLDAP/bin/ldapadd -x -W -D "cn=Manager,dc=domain,dc=cn" -f /usr/local/openLDAP/etc/openldap/init.ldif
 dn: dc=domain,dc=cn
 dc: domain
 objectClass: top
