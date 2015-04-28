@@ -127,10 +127,13 @@ public class UserServiceImpl extends ExtendService<User> implements UserService 
             AndFilter filter = new AndFilter();
             filter.and(new EqualsFilter("uid", userName));
             boolean valid = ldapTemplate.authenticate(getUserDn(userName), filter.toString(), password);
-            logger.info("isValid userName ： {}, isValid: {}", userName, valid);
+            logger.info("isValid success userName ： {}, isValid: {}", userName, valid);
             return valid;
         } catch (NamingException e) {
-            logger.error("isValid error userName ： {} \r\n {}", userName, e);
+            logger.info("isValid fail userName ： {} \r\n {}", userName, e);
+            return false;
+        } catch (Exception e) {
+            logger.info("isValid error userName ： {} \r\n {}", userName, e);
             return false;
         }
     }
