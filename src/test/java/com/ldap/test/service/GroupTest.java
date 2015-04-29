@@ -28,9 +28,6 @@ import com.ldap.core.bean.Group;
 import com.ldap.core.service.impl.GroupServiceImpl;
 
 /**
- * ClassName:Test <br/>
- * Function: TODO ADD FUNCTION. <br/>
- * Reason: TODO ADD REASON. <br/>
  * Date: 2015-4-23 下午5:35:14 <br/>
  * 
  * @author zhanghanlin
@@ -39,7 +36,7 @@ import com.ldap.core.service.impl.GroupServiceImpl;
  * @see
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "file:src/main/resources/conf_spring/applicationContext.xml" })
+@ContextConfiguration({ "file:src/main/resources/conf_spring/applicationContext*.xml" })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class GroupTest {
 
