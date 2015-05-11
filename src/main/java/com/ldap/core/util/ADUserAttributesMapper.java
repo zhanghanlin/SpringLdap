@@ -15,6 +15,8 @@ import javax.naming.directory.Attributes;
 import org.springframework.ldap.core.AttributesMapper;
 
 import com.ldap.core.bean.User;
+import com.ldap.util.Constants;
+import com.ldap.util.StringUtils;
 
 /**
  * ClassName:PersonAttributesMapper <br/>
@@ -27,34 +29,38 @@ import com.ldap.core.bean.User;
  * @since JDK 1.7
  * @see
  */
-public class UserAttributesMapper implements AttributesMapper<User> {
+public class ADUserAttributesMapper implements AttributesMapper<User> {
 
     @Override
     public User mapFromAttributes(Attributes attributes) throws NamingException {
         User user = new User();
-        Attribute uid = attributes.get("uid");
-        if (uid != null) {
-            user.setUid(uid.get().toString());
-        }
-        Attribute cn = attributes.get("cn");
-        if (cn != null) {
-            user.setCn(cn.get().toString());
+        Attribute sAMAccountName = attributes.get("sAMAccountName");
+        if (sAMAccountName != null) {
+            user.setUid(sAMAccountName.get().toString());
         }
         Attribute sn = attributes.get("sn");
         if (sn != null) {
             user.setSn(sn.get().toString());
         }
+        Attribute cn = attributes.get("cn");
+        if (cn != null) {
+            user.setCn(cn.get().toString());
+        }
         Attribute mail = attributes.get("mail");
         if (mail != null) {
             user.setMail(mail.get().toString());
         }
-        Attribute telephoneNumber = attributes.get("telephoneNumber");
-        if (telephoneNumber != null) {
-            user.setTelephoneNumber(telephoneNumber.get().toString());
+        Attribute mobile = attributes.get("mobile");
+        if (mobile != null) {
+            user.setTelephoneNumber(mobile.get().toString());
         }
-        Attribute description = attributes.get("description");
+        Attribute description = attributes.get("distinguishedName");
         if (description != null) {
-            user.setDescription(description.get().toString());
+            String dn = description.get().toString();
+            if (StringUtils.isNotBlank(dn)) {
+                dn = dn.replace("," + Constants.BASE_DN, "");
+            }
+            user.setDescription(dn);
         }
         return user;
     }

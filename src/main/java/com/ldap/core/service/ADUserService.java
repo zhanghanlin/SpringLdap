@@ -8,6 +8,10 @@
 
 package com.ldap.core.service;
 
+import java.util.List;
+
+import com.ldap.core.bean.User;
+
 /**
  * ClassName:PersionService <br/>
  * Function: TODO ADD FUNCTION. <br/>
@@ -19,32 +23,18 @@ package com.ldap.core.service;
  * @since JDK 1.7
  * @see
  */
-public interface UserService {
+public interface ADUserService {
 
     static final String objectClass[] = { "person", "top", "uidObject", "inetOrgPerson", "organizationalPerson" };
 
     /**
      * 
-     * 修改密码
+     * 查询
      * 
      * @author zhanghanlin
-     * @param userName
-     * @param oldPwd
-     * @param passpord
+     * @param s
      * @return
      * @since JDK 1.7
      */
-    public boolean updatePwd(String userName, String passpord);
-
-    /**
-     * 
-     * 验证用户
-     * 
-     * @author zhanghanlin
-     * @param userName
-     * @param password
-     * @return
-     * @since JDK 1.7
-     */
-    public boolean isValid(String userName, String password);
+    public List<User> searchAll();
 }

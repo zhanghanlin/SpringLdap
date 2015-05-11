@@ -52,8 +52,9 @@ public class GroupServiceImpl extends ExtendService<Group> implements GroupServi
             if ((memberOfGroup != null) && !memberOfGroup.isEmpty()) {
                 // Base
                 BasicAttribute ocattr = new BasicAttribute("objectClass");
-                ocattr.add("top");
-                ocattr.add(objectClass);
+                for (String oc : objectClass) {
+                    ocattr.add(oc);
+                }
                 // User
                 BasicAttribute memberAttributes = new BasicAttribute("uniquemember");
                 for (String member : memberOfGroup) {
@@ -98,43 +99,43 @@ public class GroupServiceImpl extends ExtendService<Group> implements GroupServi
     }
 
     @Override
-    public void assignUser(String userName, String groupName) {
+    public void assignUser(String uid, String groupName) {
         try {
-            ModificationItem[] item = new ModificationItem[] { new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("uniqueMember", getUserDn(userName))) };
+            ModificationItem[] item = new ModificationItem[] { new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("uniqueMember", getUserDn(uid))) };
             ldapTemplate.modifyAttributes(getGroupDn(groupName), item);
-            logger.info("assignUser success , userName ： {}, groupName : {}", userName, groupName);
+            logger.info("assignUser success , userName ： {}, groupName : {}", uid, groupName);
         } catch (Exception e) {
-            logger.error("assignUser error , userName ： {}, groupName : {} \r\n {}", userName, groupName, e);
+            logger.error("assignUser error , userName ： {}, groupName : {} \r\n {}", uid, groupName, e);
         }
     }
 
     @Override
-    public void removeUser(String userName, String groupName) {
+    public void removeUser(String uid, String groupName) {
         try {
-            ModificationItem[] item = new ModificationItem[] { new ModificationItem(DirContext.REMOVE_ATTRIBUTE, new BasicAttribute("uniqueMember", getUserDn(userName))) };
+            ModificationItem[] item = new ModificationItem[] { new ModificationItem(DirContext.REMOVE_ATTRIBUTE, new BasicAttribute("uniqueMember", getUserDn(uid))) };
             ldapTemplate.modifyAttributes(getGroupDn(groupName), item);
-            logger.info("removeUser success , userName ： {}, groupName : {}", userName, groupName);
+            logger.info("removeUser success , userName ： {}, groupName : {}", uid, groupName);
         } catch (Exception e) {
-            logger.error("assignUser error , userName ： {}, groupName : {} \r\n {}", userName, groupName, e);
+            logger.error("assignUser error , userName ： {}, groupName : {} \r\n {}", uid, groupName, e);
         }
     }
 
     @Override
-    public List<Group> getGroup(String userName) {
+    public List<Group> getGroup(String uid) {
         List<Group> list = new ArrayList<Group>();
         try {
             AndFilter andFilter = new AndFilter();
-            andFilter.and(new EqualsFilter("objectclass", "groupOfUniqueNames"));
-            andFilter.and(new EqualsFilter("uniqueMember", getUserDn(userName)));
-            List<Object> search = ldapTemplate.search("", andFilter.encode(), new GroupAttributesMapper());
+            andFilter.and(new EqualsFilter("objectclass", objectClass[0]));
+            andFilter.and(new EqualsFilter("uniqueMember", getUserDn(uid)));
+            List<Group> search = ldapTemplate.search("", andFilter.encode(), new GroupAttributesMapper());
             if ((search != null) && !search.isEmpty()) {
-                for (Object o : search) {
-                    list.add((Group) o);
+                for (Group t : search) {
+                    list.add(t);
                 }
             }
-            logger.info("getGroup success userName ： {}, size: {}", userName, list.size());
+            logger.info("getGroup success userName ： {}, size: {}", uid, list.size());
         } catch (Exception e) {
-            logger.error("getGroup error userName ： {} \r\n {}", userName, e);
+            logger.error("getGroup error userName ： {} \r\n {}", uid, e);
         }
         return list;
     }

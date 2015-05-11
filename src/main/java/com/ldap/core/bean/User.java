@@ -11,6 +11,7 @@ package com.ldap.core.bean;
 import java.io.Serializable;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ldap.util.StringUtils;
 
 /**
  * 用户. <br/>
@@ -25,35 +26,39 @@ public class User extends Object implements Serializable {
 
     private static final long serialVersionUID = 1828583374399189679L;
 
-    private String userName;
-    private String surName;
-    private String commonName;
-    private String mail;
-    private String telephone;
-    private String password;
+    private String uid; // UNIX账户的名称
+    private String sn; // 姓
+    private String cn; // 全名
+    private String mail; // 邮箱
+    private String telephoneNumber; // 手机号
+    private String userPassword; // 密码
+    private String description; // 用于存储DN
 
-    public String getUserName() {
-        return userName;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
-    public String getSurName() {
-        return surName;
+    public String getSn() {
+        if (StringUtils.isBlank(sn)) {
+            return cn;
+        }
+        return sn;
     }
 
-    public void setSurName(String surName) {
-        this.surName = surName;
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
-    public String getCommonName() {
-        return commonName;
+    public String getCn() {
+        return cn;
     }
 
-    public void setCommonName(String commonName) {
-        this.commonName = commonName;
+    public void setCn(String cn) {
+        this.cn = cn;
     }
 
     public String getMail() {
@@ -64,20 +69,35 @@ public class User extends Object implements Serializable {
         this.mail = mail;
     }
 
-    public String getTelephone() {
-        return telephone;
+    public String getTelephoneNumber() {
+        if (StringUtils.isBlank(telephoneNumber)) {
+            telephoneNumber = "0";
+        }
+        return telephoneNumber;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String[] getDn() {
+        return StringUtils.isNotBlank(description) ? description.split(",") : new String[] {};
     }
 
     @Override

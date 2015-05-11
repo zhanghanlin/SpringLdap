@@ -25,7 +25,7 @@ import com.ldap.core.bean.Group;
  */
 public interface GroupService {
 
-    static final String objectClass = "groupOfUniqueNames";
+    static final String objectClass[] = { "groupOfUniqueNames", "top" };
 
     /**
      * 

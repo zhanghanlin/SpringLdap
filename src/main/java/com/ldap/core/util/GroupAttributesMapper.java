@@ -27,10 +27,10 @@ import com.ldap.core.bean.Group;
  * @since JDK 1.7
  * @see
  */
-public class GroupAttributesMapper implements AttributesMapper<Object> {
+public class GroupAttributesMapper implements AttributesMapper<Group> {
 
     @Override
-    public Object mapFromAttributes(Attributes attributes) throws NamingException {
+    public Group mapFromAttributes(Attributes attributes) throws NamingException {
         Group group = new Group();
         Attribute name = attributes.get("cn");
         if (name != null) {

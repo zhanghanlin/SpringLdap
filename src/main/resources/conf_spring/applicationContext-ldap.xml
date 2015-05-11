@@ -6,14 +6,23 @@
        http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	
+
 	<description>Spring LDAP</description>
-	
-	<ldap:context-source id="baseLdap" url="${ldap.url}"
-		base="${ldap.base}" username="${ldap.username}"
-		password="${ldap.password}" authentication-strategy-ref="simpleDirContextAuthenticationStrategy" />
+
 	<!--默认simple方式 -->
 	<bean id="simpleDirContextAuthenticationStrategy"
 		class="org.springframework.ldap.core.support.SimpleDirContextAuthenticationStrategy" />
-	<ldap:ldap-template id="ldapTemplate" context-source-ref="baseLdap"/>
+
+	<ldap:context-source id="baseLdap" url="${ldap.url}"
+		base="${ldap.base}" username="${ldap.username}" password="${ldap.password}"
+		authentication-strategy-ref="simpleDirContextAuthenticationStrategy" />
+
+	<ldap:context-source id="baseAd" url="${ad.url}"
+		base="${ad.base}" username="${ad.username}" referral="follow"
+		password="${ad.password}" authentication-strategy-ref="simpleDirContextAuthenticationStrategy" />
+
+	<ldap:ldap-template id="ldapTemplate"
+		context-source-ref="baseLdap" />
+	<ldap:ldap-template id="adTemplate"
+		context-source-ref="baseAd" />
 </beans>

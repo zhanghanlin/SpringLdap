@@ -59,13 +59,13 @@ public class UserTest {
     @Test
     public void testACreate() {
         User user = new User();
-        user.setTelephone("8888");
-        user.setPassword(defaultPwd);
+        user.setTelephoneNumber("8888");
+        user.setUserPassword(defaultPwd);
         for (String s : users) {
-            user.setUserName(s);
-            user.setCommonName(s);
+            user.setUid(s);
+            user.setCn(s);
             user.setMail(s + "@domain.cn");
-            user.setSurName(s);
+            user.setSn(s);
             userService.create(user);
         }
         Assert.assertTrue(true);
@@ -73,7 +73,7 @@ public class UserTest {
 
     @Test
     public void testBSearch() {
-        User user = userService.search(getFirstUser());
+        User user = userService.search("211");
         logger.info(user.toString());
         Assert.assertNotNull(user);
     }
@@ -82,7 +82,7 @@ public class UserTest {
     public void testCUpdate() {
         User user = userService.search(getFirstUser());
         logger.info("before update : " + user.toString());
-        user.setCommonName("update cn");
+        user.setCn("update cn");
         boolean res = userService.update(user);
         logger.info("after update : {} ", userService.search(getFirstUser()).toString());
         Assert.assertTrue(res);
