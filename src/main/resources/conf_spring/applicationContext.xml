@@ -6,7 +6,7 @@
        http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	
+
 	<description>Spring LDAP</description>
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -19,5 +19,10 @@
 			</list>
 		</property>
 	</bean>
-	<context:component-scan base-package="com.ldap.core" />
+	<context:component-scan
+		base-package="com.ldap.core.service.impl,com.ldap.controller" />
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 </beans>

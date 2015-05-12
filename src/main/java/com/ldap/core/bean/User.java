@@ -11,6 +11,8 @@ package com.ldap.core.bean;
 import java.io.Serializable;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.annotation.JSONType;
 import com.ldap.util.StringUtils;
 
 /**
@@ -22,6 +24,8 @@ import com.ldap.util.StringUtils;
  * @since JDK 1.7
  * @see
  */
+
+@JSONType(ignores = { "ou", "description", "dn" })
 public class User extends Object implements Serializable {
 
     private static final long serialVersionUID = 1828583374399189679L;
@@ -34,6 +38,7 @@ public class User extends Object implements Serializable {
     private String userPassword; // 密码
     private String description; // 用于存储DN
 
+    @JSONField(name = "userName")
     public String getUid() {
         return StringUtils.leftPad(uid, 5, "0");
     }
@@ -42,6 +47,7 @@ public class User extends Object implements Serializable {
         this.uid = uid;
     }
 
+    @JSONField(name = "surName")
     public String getSn() {
         if (StringUtils.isBlank(sn)) {
             return cn;
@@ -53,6 +59,7 @@ public class User extends Object implements Serializable {
         this.sn = sn;
     }
 
+    @JSONField(name = "commonName")
     public String getCn() {
         return cn;
     }
@@ -69,6 +76,7 @@ public class User extends Object implements Serializable {
         this.mail = mail;
     }
 
+    @JSONField(name = "telephone")
     public String getTelephoneNumber() {
         if (StringUtils.isBlank(telephoneNumber)) {
             telephoneNumber = "0";
@@ -96,11 +104,11 @@ public class User extends Object implements Serializable {
         this.description = description;
     }
 
-    public String[] getOU() {
+    public String[] getOu() {
         return StringUtils.isNotBlank(description) ? description.split(",") : new String[] {};
     }
 
-    public String getDN() {
+    public String getDn() {
         return "UID=" + getUid() + "," + description;
     }
 

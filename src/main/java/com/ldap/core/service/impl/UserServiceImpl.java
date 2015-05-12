@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
                 ocattr.add(oc);
             }
             BasicAttribute ouattr = new BasicAttribute("ou");
-            String[] ou = t.getOU();
+            String[] ou = t.getOu();
             if ((ou == null) || (ou.length == 0)) {
                 logger.info("create error : user dn is null");
                 return false;
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
             attrs.put("userPassword", StringUtils.trimToEmpty(t.getUserPassword()));
             attrs.put("uid", StringUtils.trimToEmpty(t.getUid()));
             attrs.put("description", StringUtils.trimToEmpty(t.getDescription()));
-            ldapTemplate.bind(t.getDN(), null, attrs);
+            ldapTemplate.bind(t.getDn(), null, attrs);
             logger.info("create success ： {}", t.toString());
             return true;
         } catch (Exception e) {
