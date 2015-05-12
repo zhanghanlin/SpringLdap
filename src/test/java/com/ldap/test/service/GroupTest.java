@@ -8,10 +8,9 @@
 
 package com.ldap.test.service;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -43,75 +42,21 @@ public class GroupTest {
     Logger logger = LoggerFactory.getLogger(GroupTest.class);
 
     @Autowired
-    GroupServiceImpl groupService;
-
-    static HashMap<String, String[]> groups = new HashMap<String, String[]>();
-
-    static {
-        groups.put("OA", new String[] { "zhaoyi", "qianer", "sunsan", "lisi" });
-        groups.put("HR", new String[] { "zhouwu", "wuliu", "zhengqi", "wangba" });
-    }
-
-    /**
-     * 部门下首个用户
-     * 
-     * @author zhanghanlin
-     * @param group
-     * @return
-     * @since JDK 1.7
-     */
-    static String getFirstUser(String group) {
-        return groups.get(group)[0];
-    }
+    GroupServiceImpl adGroupService;
 
     @Test
-    public void testACreate() {
-        boolean res = true;
-        for (Entry<String, String[]> entry : groups.entrySet()) {
-            Group group = new Group();
-            group.setName(entry.getKey());
-            group.setDescription(entry.getKey() + " System");
-            group.setMemberOfGroup(Arrays.asList(entry.getValue()));
-            if (!res) {
-                break;
-            }
-            res = groupService.create(group);
-        }
-        Assert.assertTrue(res);
-    }
-
-    @Test
-    public void testBRemoveUser() {
-        String group = "HR";
-        groupService.removeUser(getFirstUser(group), group);
-    }
-
-    @Test
-    public void testCAssignUser() {
-        String group = "HR";
-        groupService.assignUser(getFirstUser(group), group);
-    }
-
-    @Test
-    public void testDGetGroup() {
-        List<Group> list = groupService.getGroup(getFirstUser("HR"));
+    public void testASearchAll() {
+        List<Group> list = adGroupService.searchAll();
         Assert.assertNotNull(list);
-        for (Group g : list) {
-            logger.info(g.toString());
-        }
-    }
-
-    @Test
-    public void testDGetDn() {
-        for (Entry<String, String[]> entry : groups.entrySet()) {
-            logger.info(entry.getKey() + " DN : {}", groupService.getDn("cn", entry.getKey()));
-        }
-    }
-
-    @Test
-    public void testEDelete() {
-        for (Entry<String, String[]> entry : groups.entrySet()) {
-            groupService.delete(entry.getKey());
+        Collections.sort(list, new Comparator<Group>() {
+            @Override
+            public int compare(Group o1, Group o2) {
+                return o1.getLength() - o2.getLength();
+            }
+        });
+        for (Group t : list) {
+            System.out.println(t.toString());
+            adGroupService.create(t);
         }
     }
 }

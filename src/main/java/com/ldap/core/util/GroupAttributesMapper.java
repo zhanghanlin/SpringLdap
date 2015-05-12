@@ -15,6 +15,8 @@ import javax.naming.directory.Attributes;
 import org.springframework.ldap.core.AttributesMapper;
 
 import com.ldap.core.bean.Group;
+import com.ldap.util.Constants;
+import com.ldap.util.StringUtils;
 
 /**
  * ClassName:PersonAttributesMapper <br/>
@@ -32,13 +34,24 @@ public class GroupAttributesMapper implements AttributesMapper<Group> {
     @Override
     public Group mapFromAttributes(Attributes attributes) throws NamingException {
         Group group = new Group();
-        Attribute name = attributes.get("cn");
+        Attribute name = attributes.get("name");
         if (name != null) {
             group.setName(name.get().toString());
         }
-        Attribute description = attributes.get("description");
+        Attribute ou = attributes.get("ou");
+        if (ou != null) {
+            group.setOu(ou.get().toString());
+        }
+        Attribute description = attributes.get("distinguishedName");
         if (description != null) {
-            group.setDescription(description.get().toString());
+            String dn = description.get().toString();
+            if (StringUtils.isNotBlank(dn)) {
+                dn = dn.replace("," + Constants.BASE_DN, "");
+            }
+            String[] ouList = dn.replace("OU=", "").split(",");
+            group.setDistinguishedName(dn);
+            group.setOuList(ouList);
+            group.setLength(ouList.length);
         }
         return group;
     }

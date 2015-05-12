@@ -24,6 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.ldap.core.bean.User;
 import com.ldap.core.service.impl.ADUserServiceImpl;
 import com.ldap.core.service.impl.UserServiceImpl;
+import com.ldap.util.StringUtils;
 
 /**
  * Date: 2015-4-23 下午5:35:14 <br/>
@@ -51,7 +52,7 @@ public class ADUserTest {
         Assert.assertNotNull(list);
         for (User t : list) {
             System.out.println(t.toString());
-            if (t.getDescription().contains("CN=Users")) {
+            if (!StringUtils.isNumeric(t.getUid())) {
                 continue;
             }
             boolean res = userService.create(t);

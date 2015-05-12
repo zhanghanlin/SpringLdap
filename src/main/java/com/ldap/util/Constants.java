@@ -21,5 +21,5 @@ package com.ldap.util;
  */
 public class Constants {
 
-    public static final String BASE_DN = "DC=domain,DC=cn";
+    public static final String BASE_DN = "DC=minshengec,DC=cn";
 }

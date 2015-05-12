@@ -15,7 +15,6 @@ import javax.naming.directory.Attributes;
 import org.springframework.ldap.core.AttributesMapper;
 
 import com.ldap.core.bean.User;
-import com.ldap.util.Constants;
 import com.ldap.util.StringUtils;
 
 /**
@@ -57,10 +56,15 @@ public class ADUserAttributesMapper implements AttributesMapper<User> {
         Attribute description = attributes.get("distinguishedName");
         if (description != null) {
             String dn = description.get().toString();
-            if (StringUtils.isNotBlank(dn)) {
-                dn = dn.replace("," + Constants.BASE_DN, "");
+            StringBuffer sb = new StringBuffer();
+            for (String ou : dn.split(",")) {
+                if (ou.toUpperCase().contains("OU=")) {
+                    sb.append(ou).append(",");
+                }
             }
-            user.setDescription(dn);
+            if (StringUtils.isNotBlank(sb)) {
+                user.setDescription(sb.substring(0, sb.length() - 1).toString());
+            }
         }
         return user;
     }

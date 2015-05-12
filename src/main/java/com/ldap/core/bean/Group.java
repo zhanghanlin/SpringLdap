@@ -1,21 +1,22 @@
 /**
  * Project Name:SpringLdap
- * File Name:Group.java
+ * File Name:ADGroup.java
  * Package Name:com.ldap.core.bean
- * Date:2015-4-27下午1:14:35
+ * Date:2015-5-11上午11:07:50
  *
  */
 
 package com.ldap.core.bean;
 
 import java.io.Serializable;
-import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * 部门. <br/>
- * Date: 2015-4-27 下午1:14:35 <br/>
+ * ClassName:ADGroup <br/>
+ * Function: TODO ADD FUNCTION. <br/>
+ * Reason: TODO ADD REASON. <br/>
+ * Date: 2015-5-11 上午11:07:50 <br/>
  * 
  * @author zhanghanlin
  * @version
@@ -24,10 +25,13 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class Group extends Object implements Serializable {
 
-    private static final long serialVersionUID = -7734938456409710440L;
-    private String name;
-    private String description;
-    private List<String> memberOfGroup;
+    private static final long serialVersionUID = -3844968720304042156L;
+
+    private String name; // 组名称
+    private String ou; // 组名称
+    private String distinguishedName; // dn
+    private String[] ouList; // 组集合
+    public int length;
 
     public String getName() {
         return name;
@@ -37,20 +41,36 @@ public class Group extends Object implements Serializable {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getOu() {
+        return ou;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setOu(String ou) {
+        this.ou = ou;
     }
 
-    public List<String> getMemberOfGroup() {
-        return memberOfGroup;
+    public String getDistinguishedName() {
+        return distinguishedName;
     }
 
-    public void setMemberOfGroup(List<String> memberOfGroup) {
-        this.memberOfGroup = memberOfGroup;
+    public void setDistinguishedName(String distinguishedName) {
+        this.distinguishedName = distinguishedName;
+    }
+
+    public String[] getOuList() {
+        return ouList;
+    }
+
+    public void setOuList(String[] ouList) {
+        this.ouList = ouList;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 
     @Override

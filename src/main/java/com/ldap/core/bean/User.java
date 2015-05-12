@@ -35,7 +35,7 @@ public class User extends Object implements Serializable {
     private String description; // 用于存储DN
 
     public String getUid() {
-        return uid;
+        return StringUtils.leftPad(uid, 5, "0");
     }
 
     public void setUid(String uid) {
@@ -96,8 +96,12 @@ public class User extends Object implements Serializable {
         this.description = description;
     }
 
-    public String[] getDn() {
+    public String[] getOU() {
         return StringUtils.isNotBlank(description) ? description.split(",") : new String[] {};
+    }
+
+    public String getDN() {
+        return "UID=" + getUid() + "," + description;
     }
 
     @Override

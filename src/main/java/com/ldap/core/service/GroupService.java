@@ -25,38 +25,18 @@ import com.ldap.core.bean.Group;
  */
 public interface GroupService {
 
-    static final String objectClass[] = { "groupOfUniqueNames", "top" };
+    static final String objectClass[] = { "organizationalUnit", "top" };
+
+    public boolean create(Group t);
 
     /**
      * 
-     * 为该组分配用户
+     * 查询
      * 
      * @author zhanghanlin
-     * @param uid
-     * @param groupName
-     * @since JDK 1.7
-     */
-    public void assignUser(String uid, String groupName);
-
-    /**
-     * 
-     * 移除该组用户
-     * 
-     * @author zhanghanlin
-     * @param uid
-     * @param groupName
-     * @since JDK 1.7
-     */
-    public void removeUser(String uid, String groupName);
-
-    /**
-     * 
-     * 查询用户所属组
-     * 
-     * @author zhanghanlin
-     * @param userName
+     * @param s
      * @return
      * @since JDK 1.7
      */
-    public List<Group> getGroup(String userName);
+    public List<Group> searchAll();
 }

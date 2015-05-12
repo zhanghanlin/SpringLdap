@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.ldap.core.bean.User;
 import com.ldap.core.service.impl.UserServiceImpl;
+import com.ldap.util.StringUtils;
 
 /**
  * Date: 2015-4-23 下午5:35:14 <br/>
@@ -40,93 +41,73 @@ public class UserTest {
     @Autowired
     UserServiceImpl userService;
 
-    static String[] users = new String[] { "zhaoyi", "qianer", "sunsan", "lisi", "zhouwu", "wuliu", "zhengqi", "wangba" };
-
     static String defaultPwd = "111111";
-
-    /**
-     * 首个用户
-     * 
-     * @author zhanghanlin
-     * @param group
-     * @return
-     * @since JDK 1.7
-     */
-    static String getFirstUser() {
-        return users[0];
-    }
+    static String testUid = StringUtils.leftPad("5001", 5, "0");
 
     @Test
     public void testACreate() {
         User user = new User();
         user.setTelephoneNumber("8888");
         user.setUserPassword(defaultPwd);
-        for (String s : users) {
-            user.setUid(s);
-            user.setCn(s);
-            user.setMail(s + "@domain.cn");
-            user.setSn(s);
-            userService.create(user);
-        }
-        Assert.assertTrue(true);
+        user.setUid(testUid);
+        String name = "test";
+        user.setSn(name);
+        user.setCn(name);
+        user.setMail(name + "@domain.cn");
+        user.setDescription("OU=其他部门,OU=民生电子商务有限责任公司");
+        boolean res = userService.create(user);
+        Assert.assertTrue(res);
     }
 
     @Test
     public void testBSearch() {
-        User user = userService.search("211");
+        User user = userService.search(testUid);
         logger.info(user.toString());
         Assert.assertNotNull(user);
     }
 
     @Test
     public void testCUpdate() {
-        User user = userService.search(getFirstUser());
+        User user = userService.search(testUid);
         logger.info("before update : " + user.toString());
-        user.setCn("update cn");
+        user.setCn("test2");
         boolean res = userService.update(user);
-        logger.info("after update : {} ", userService.search(getFirstUser()).toString());
+        logger.info("after update : {} ", userService.search(testUid));
         Assert.assertTrue(res);
     }
 
     @Test
     public void testDGetDn() {
-        String dn = userService.getDn("uid", getFirstUser());
+        String dn = userService.getDnByUid(testUid);
         logger.info(dn);
         Assert.assertNotNull(dn);
     }
 
     @Test
     public void testEIsVaild() {
-        boolean res = userService.isValid(getFirstUser(), defaultPwd);
+        boolean res = userService.isValid(testUid, defaultPwd);
         Assert.assertTrue(res);
     }
 
     @Test
     public void testFUpdatePwd() {
-        String userName = getFirstUser();
         String password = "123456";
         // 验证原始密码
-        boolean isValid = userService.isValid(getFirstUser(), defaultPwd);
+        boolean isValid = userService.isValid(testUid, defaultPwd);
         if (isValid) {
-            boolean res = userService.updatePwd(getFirstUser(), password);
+            boolean res = userService.updatePwd(testUid, password);
             logger.info("update pwd : {}", res);
         } else {
-            logger.info("updatePwd fail , user vaild fail, userName ： {}", userName);
+            logger.info("updatePwd fail , user vaild fail, userName ： {}", testUid);
         }
-        isValid = userService.isValid(getFirstUser(), password);
+        isValid = userService.isValid(testUid, password);
         logger.info("update pwd after valid: {}", isValid);
         Assert.assertTrue(isValid);
     }
 
     @Test
     public void testGDelete() {
-        boolean res = true;
-        for (String s : users) {
-            if (!res) {
-                break;
-            }
-            res = userService.delete(s);
-        }
+        boolean res = userService.delete(testUid);
         Assert.assertTrue(res);
     }
 }

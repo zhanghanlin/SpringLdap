@@ -8,6 +8,8 @@
 
 package com.ldap.core.service;
 
+import com.ldap.core.bean.User;
+
 /**
  * ClassName:PersionService <br/>
  * Function: TODO ADD FUNCTION. <br/>
@@ -22,6 +24,49 @@ package com.ldap.core.service;
 public interface UserService {
 
     static final String objectClass[] = { "person", "top", "uidObject", "inetOrgPerson", "organizationalPerson" };
+
+    /**
+     * 创建
+     * 
+     * @author zhanghanlin
+     * @param t
+     * @return
+     * @since JDK 1.7
+     */
+    public boolean create(User t);
+
+    /**
+     * 
+     * 删除
+     * 
+     * @author zhanghanlin
+     * @param s
+     * @return
+     * @since JDK 1.7
+     */
+    public boolean delete(String s);
+
+    /**
+     * 
+     * 更新
+     * 
+     * @author zhanghanlin
+     * @param t
+     * @return
+     * @since JDK 1.7
+     */
+    public boolean update(User t);
+
+    /**
+     * 
+     * 查询
+     * 
+     * @author zhanghanlin
+     * @param s
+     * @return
+     * @since JDK 1.7
+     */
+    public User search(String s);
 
     /**
      * 
